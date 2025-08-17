@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analyst Agent API - Demo & Testing Interface</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Data Analyst Agent API</h1>
+            <p class="header__subtitle">Upload data, ask questions, get intelligent insights</p>
+        </header>
+
+        <!-- Examples Gallery -->
+        <section class="examples-section">
+            <h2>Quick Start Examples</h2>
+            <div class="examples-grid">
+                <div class="example-card card" data-example="movies">
+                    <div class="card__body">
+                        <h3>🎬 Movie Revenue Analysis</h3>
+                        <p>Analyze highest-grossing films data with correlation analysis and visualizations</p>
+                        <button class="btn btn--secondary btn--sm">Load Example</button>
+                    </div>
+                </div>
+                <div class="example-card card" data-example="sales">
+                    <div class="card__body">
+                        <h3>📊 Sales Performance</h3>
+                        <p>Quarterly sales analysis with growth trends and seasonal patterns</p>
+                        <button class="btn btn--secondary btn--sm">Load Example</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Analysis Interface -->
+        <main class="main-interface">
+            
+            <!-- File Upload Section -->
+            <section class="upload-section">
+                <h2>1. Upload Your Data</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-area__content">
+                        <div class="upload-icon">📁</div>
+                        <p class="upload-text">Drag and drop files here or <span class="upload-link">browse files</span></p>
+                        <p class="upload-subtitle">Supports: CSV, Excel, JSON, Images, TXT, TSV</p>
+                    </div>
+                    <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.xls,.json,.txt,.png,.jpg,.jpeg,.tsv" class="hidden">
+                </div>
+                
+                <!-- File Preview Area -->
+                <div class="file-preview" id="filePreview"></div>
+            </section>
+
+            <!-- Questions Input Section -->
+            <section class="questions-section">
+                <h2>2. Ask Your Questions</h2>
+                <div class="form-group">
+                    <label for="questionsInput" class="form-label">Enter your analysis questions (one per line)</label>
+                    <textarea 
+                        id="questionsInput" 
+                        class="form-control" 
+                        rows="6" 
+                        placeholder="What is the average value of the numeric columns?
+Are there any correlations between variables?
+Create a scatter plot showing the relationship between two variables
+What are the key insights from this data?"
+                    ></textarea>
+                </div>
+                
+                <!-- Example Questions -->
+                <div class="example-questions">
+                    <p class="example-questions__label">Example questions:</p>
+                    <div class="example-questions__list">
+                        <button class="example-question-btn btn btn--outline btn--sm" data-question="What is the average value of the numeric columns?">Statistical Summary</button>
+                        <button class="example-question-btn btn btn--outline btn--sm" data-question="Are there any correlations between variables?">Correlations</button>
+                        <button class="example-question-btn btn btn--outline btn--sm" data-question="Create a scatter plot showing the relationship between two variables">Scatter Plot</button>
+                        <button class="example-question-btn btn btn--outline btn--sm" data-question="Identify any outliers or anomalies in the data">Find Outliers</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Configuration Section -->
+            <section class="api-section">
+                <h2>3. API Configuration</h2>
+                <div class="api-config">
+                    <div class="form-group">
+                        <label for="apiEndpoint" class="form-label">API Endpoint URL</label>
+                        <input 
+                            type="url" 
+                            id="apiEndpoint" 
+                            class="form-control" 
+                            value="http://localhost:5000/api/"
+                            placeholder="http://localhost:5000/api/"
+                        >
+                    </div>
+                    <button class="btn btn--outline btn--sm" id="testConnection">Test Connection</button>
+                    <div class="connection-status" id="connectionStatus"></div>
+                </div>
+            </section>
+
+            <!-- Submit Section -->
+            <section class="submit-section">
+                <button class="btn btn--primary btn--lg btn--full-width" id="analyzeButton">
+                    <span class="button-text">🔍 Analyze Data</span>
+                    <span class="loading-spinner hidden">⏳ Processing...</span>
+                </button>
+                <div class="progress-bar hidden" id="progressBar">
+                    <div class="progress-bar__fill"></div>
+                    <div class="progress-bar__text">Analyzing your data...</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Results Section -->
+        <section class="results-section hidden" id="resultsSection">
+            <h2>Analysis Results</h2>
+            
+            <!-- Results Content -->
+            <div class="results-content" id="resultsContent"></div>
+            
+            <!-- Raw JSON Response -->
+            <div class="raw-response">
+                <button class="btn btn--outline btn--sm toggle-raw" id="toggleRaw">Show Raw JSON</button>
+                <pre class="raw-json hidden" id="rawJson"></pre>
+            </div>
+            
+            <!-- Export Options -->
+            <div class="export-options">
+                <h3>Export Results</h3>
+                <div class="export-buttons">
+                    <button class="btn btn--secondary btn--sm" id="exportJson">Download JSON</button>
+                    <button class="btn btn--secondary btn--sm" id="exportPdf">Download PDF</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session History -->
+        <section class="history-section">
+            <h2>Session History</h2>
+            <div class="history-list" id="historyList">
+                <p class="history-empty">No previous analyses in this session</p>
+            </div>
+        </section>
+
+        <!-- Error Modal -->
+        <div class="modal hidden" id="errorModal">
+            <div class="modal__overlay">
+                <div class="modal__content">
+                    <div class="modal__header">
+                        <h3>Error</h3>
+                        <button class="modal__close" id="closeError">&times;</button>
+                    </div>
+                    <div class="modal__body">
+                        <p id="errorMessage"></p>
+                    </div>
+                    <div class="modal__footer">
+                        <button class="btn btn--primary" id="closeErrorBtn">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Notification -->
+        <div class="notification hidden" id="notification">
+            <div class="notification__content">
+                <span class="notification__icon">✅</span>
+                <span class="notification__text">Analysis completed successfully!</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
