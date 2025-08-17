@@ -1,4 +1,6 @@
 // Data Analyst Agent API Demo Application
+const API_ENDPOINT = 'https://tdsproj2-production.up.railway.app/api/';
+
 class DataAnalystDemo {
     constructor() {
         this.uploadedFiles = [];
