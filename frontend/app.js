@@ -1,5 +1,5 @@
 // Data Analyst Agent API Demo Application
-const API_ENDPOINT = 'https://tdsproj2-production.up.railway.app/api/';
+const API_ENDPOINT = 'tdsproj2-production-6765.up.railway.app';
 
 class DataAnalystDemo {
     constructor() {
